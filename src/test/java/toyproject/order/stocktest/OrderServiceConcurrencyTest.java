@@ -71,8 +71,12 @@ public class OrderServiceConcurrencyTest {
                     startLatch.await(); // 출발 대기
                     orderService.order(memberId, itemId, 1);
                     success.incrementAndGet();
-                } catch (Exception e) {
+                } catch (IllegalStateException e) {
                     // 실패 정상
+                    System.out.println("에러 발생 이유: " + e.getMessage());
+                    fail.incrementAndGet();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 } finally {
                     doneLatch.countDown();
                 }
