@@ -38,6 +38,8 @@
 - `doneLatch`: 모든 스레드 종료 대기
 - 성공/실패 카운트: `success=1`, `fail=1` 검증
 - DB 재조회: 캐시 영향 제거
+</details>
+
 
 ## REST API (Postman 검증)
 
@@ -46,9 +48,7 @@
 - 회원 생성 → 회원 목록 조회
 - 상품 생성 → 상품 목록 조회
 - 주문 생성 → 주문 목록 조회(주문 + 주문상품 포함)
-</details>
 
----
 <details>
     <summary>Member API</summary>
 
