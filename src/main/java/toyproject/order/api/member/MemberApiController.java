@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import toyproject.order.api.member.dto.CreateMemberRequest;
 import toyproject.order.api.member.dto.CreateMemberResponse;
 import toyproject.order.api.member.dto.MemberResponse;
-import toyproject.order.domain.Member;
-import toyproject.order.repository.MemberRepository;
+
+import toyproject.order.service.MemberService;
 
 import java.util.List;
 
@@ -17,18 +17,19 @@ import java.util.List;
 @RequestMapping("/api/members")
 public class MemberApiController {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+
 
     @PostMapping
     public ResponseEntity<CreateMemberResponse> create(@RequestBody @Valid CreateMemberRequest request) {
-        Member member = new Member(request.name());
-        memberRepository.save(member);
-        return ResponseEntity.ok(new CreateMemberResponse(member.getId()));
+        Long id = memberService.join(request.name());
+//        return ResponseEntity.ok(new CreateMemberResponse(id));
+        return ResponseEntity.status(201).body(new CreateMemberResponse(id));
     }
 
     @GetMapping
     public List<MemberResponse> list() {
-        return memberRepository.findAll().stream().map(
+        return memberService.findMembers().stream().map(
                 m -> new MemberResponse(m.getId(), m.getName()))
                 .toList();
     }

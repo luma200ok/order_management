@@ -27,9 +27,11 @@ public class Item {
         this.price = price;
         this.stockQuantity = stockQuantity;
     }
+/*
 
     @Version
     private Long version; // 낙관적 락 핵심
+*/
 
     // 재고 차감
     public void removeStock(int quantity) {

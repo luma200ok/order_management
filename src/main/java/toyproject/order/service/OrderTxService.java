@@ -26,11 +26,6 @@ public class OrderTxService {
         Member member = memberRepository.findOne(memberId);
 
         Item item = itemRepository.findOneWithOptimisticLock(itemId);
-
-        System.out.println("[ORDER] thread=" + Thread.currentThread().getName()
-                + " loaded stock=" + item.getStockQuantity()
-                + " ver=" + item.getVersion());
-
         item.removeStock(count);
 
         OrderItem orderItem = new OrderItem(item, item.getPrice(), count);

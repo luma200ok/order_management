@@ -6,6 +6,11 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_member_name",
+                columnNames = "name")
+)
 @Entity
 @Getter
 public class Member {
@@ -15,6 +20,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "member")
