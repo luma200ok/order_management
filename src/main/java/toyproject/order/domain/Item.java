@@ -42,4 +42,11 @@ public class Item {
     public void addStock(int quantity) {
         this.stockQuantity += quantity;
     }
+
+    public void change(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
 }

@@ -1,10 +1,9 @@
-package toyproject.order.api;
+package toyproject.order.api.order;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toyproject.order.query.OrderQueryRepository;
 import toyproject.order.query.OrderQueryService;
 import toyproject.order.query.dto.OrderDto;
 

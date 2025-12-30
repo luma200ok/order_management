@@ -1,4 +1,4 @@
-package toyproject.order.api;
+package toyproject.order.api.order;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import toyproject.order.api.dto.CreateOrderRequest;
-import toyproject.order.api.dto.CreateOrderResponse;
+import toyproject.order.api.order.dto.CreateOrderRequest;
+import toyproject.order.api.order.dto.CreateOrderResponse;
 import toyproject.order.service.OrderService;
 
 @RestController

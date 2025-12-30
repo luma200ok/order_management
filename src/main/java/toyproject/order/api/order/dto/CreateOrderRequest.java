@@ -1,4 +1,4 @@
-package toyproject.order.api.dto;
+package toyproject.order.api.order.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
