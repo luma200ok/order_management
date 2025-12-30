@@ -64,6 +64,9 @@ public class OrderService {
     @Transactional
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findOne(orderId);
+        if (order == null) {
+            throw new IllegalStateException("주문이 존재하지 않습니다.");
+        }
         order.cancel();
     }
 

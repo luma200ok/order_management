@@ -38,6 +38,8 @@
 - `doneLatch`: 모든 스레드 종료 대기
 - 성공/실패 카운트: `success=1`, `fail=1` 검증
 - DB 재조회: 캐시 영향 제거
+</details>
+
 
 ## REST API (Postman 검증)
 
@@ -46,9 +48,7 @@
 - 회원 생성 → 회원 목록 조회
 - 상품 생성 → 상품 목록 조회
 - 주문 생성 → 주문 목록 조회(주문 + 주문상품 포함)
-</details>
 
----
 <details>
     <summary>Member API</summary>
 
@@ -75,8 +75,8 @@
 
 #### 2) 회원 중복 생성 방지
 - **POST** `/api/members`
-**Response409**
-이미 존재하는 회원 입니다.
+  **Response409**
+  이미 존재하는 회원 입니다.
 
 <img width="1116" height="847" alt="Pasted Graphic 3" src="https://github.com/user-attachments/assets/280f6ba7-8572-4708-b630-e212f7a27b19" />
 
@@ -179,12 +179,33 @@
   }
 ]
 ```
+![Pasted Graphic.png](../../../../Library/Group%20Containers/group.com.apple.notes/Accounts/608DC193-70B2-4AF9-8FB7-85307BCA6ED0/Media/5E1D1287-BAD6-41B2-88DD-67C518ECB0C1/1_94486A72-49C8-407B-A6A3-67B67FC9B0D7/Pasted%20Graphic.png)
 
-</details>
+### Orders Cancel API
+
+#### 1) 주문 취소
+- **POST** `/api/orders/1/cancel`
+
+```json
+**Response **
+{
+  "orderId": 1,
+  "status" : "CANCEL"
+}
+```
+![Pasted Graphic 1.png](../../../../Library/Group%20Containers/group.com.apple.notes/Accounts/608DC193-70B2-4AF9-8FB7-85307BCA6ED0/Media/649A77C0-476A-431A-8FBB-6D0A8375627C/1_47E7DCDE-DC8D-456F-808C-AEF95A42B168/Pasted%20Graphic%201.png)
 
 
+#### 2) 주문 취소 후 재고 수량 복구
+- stockQuantity : 4 ➡️ 5
+- 
+![Pasted Graphic.png](../../../../Library/Group%20Containers/group.com.apple.notes/Accounts/608DC193-70B2-4AF9-8FB7-85307BCA6ED0/Media/5E1D1287-BAD6-41B2-88DD-67C518ECB0C1/1_94486A72-49C8-407B-A6A3-67B67FC9B0D7/Pasted%20Graphic.png)
 ### Notes
 - 쓰기 작업(회원/상품/주문 생성) 은 서비스 계층에서 @Transactional로 처리하여 영속성 컨텍스트/트랜잭션 경계가 보장되도록 구성했다.
 - 예외 처리(중복 회원 등)는 @RestControllerAdvice 기반으로 HTTP 상태 코드로 응답한다.
+
+
+</details>
+
 
 ---
