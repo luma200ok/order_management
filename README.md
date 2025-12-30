@@ -1,5 +1,8 @@
 ## 동시성(재고 정합성) 처리
 
+<details>
+    <summary> 동시성 (재고 정합성)</summary>
+
 ### 문제
 재고가 **1개인 상품**에 대해 동시에 2명이 주문(각 1개)할 때, 동시성 제어가 없으면 아래 문제가 발생할 수 있다.
 
@@ -43,8 +46,11 @@
 - 회원 생성 → 회원 목록 조회
 - 상품 생성 → 상품 목록 조회
 - 주문 생성 → 주문 목록 조회(주문 + 주문상품 포함)
+</details>
 
 ---
+<details>
+    <summary>Member API</summary>
 
 ### Members API
 
@@ -87,6 +93,10 @@
 ```
 <img width="1115" height="842" alt="Pasted Graphic 2" src="https://github.com/user-attachments/assets/8e57f202-a30c-4f3b-949b-85371ebcdd61" />
 
+</details>
+
+<details>
+    <summary>Member API</summary>
 
 ### Items API
 
@@ -121,7 +131,10 @@
     "stockQuantity": 5}
 ```
 <img width="1117" height="846" alt="Pasted Graphic 5" src="https://github.com/user-attachments/assets/29347d0f-559f-43d8-bfbd-d2433e2388ac" />
+</details>
 
+<details>
+    <summary>Orders API</summary>
 
 ### Orders API
 
@@ -167,6 +180,11 @@
 ]
 ```
 
+</details>
+
+
 ### Notes
 - 쓰기 작업(회원/상품/주문 생성) 은 서비스 계층에서 @Transactional로 처리하여 영속성 컨텍스트/트랜잭션 경계가 보장되도록 구성했다.
 - 예외 처리(중복 회원 등)는 @RestControllerAdvice 기반으로 HTTP 상태 코드로 응답한다.
+
+---
