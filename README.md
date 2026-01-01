@@ -1,7 +1,7 @@
 ## 동시성(재고 정합성) 처리
 
 <details>
-    <summary> 동시성 (재고 정합성)</summary>
+    <summary> 🔽동시성 (재고 정합성)</summary>
 
 ### 문제
 재고가 **1개인 상품**에 대해 동시에 2명이 주문(각 1개)할 때, 동시성 제어가 없으면 아래 문제가 발생할 수 있다.
@@ -51,8 +51,8 @@
 - 주문 생성 → 주문 목록 조회(주문 + 주문상품 포함)
 
 <details>
-    <summary>Member API</summary>
-
+    <summary>🔽Member API</summary>
+    
 ### Members API
 
 #### 1) 회원 생성
@@ -97,7 +97,7 @@
 </details>
 
 <details>
-    <summary>Member API</summary>
+    <summary>🔽Member API</summary>
 
 ### Items API
 
@@ -135,7 +135,7 @@
 </details>
 
 <details>
-    <summary>Orders API</summary>
+    <summary>🔽Orders API</summary>
 
 ### Orders API
 
@@ -222,7 +222,7 @@
 - 최종적으로 **Query DTO 직접 조회(V4)**로 필요한 데이터만 조회/전송하도록 최적화했습니다.
 
 <details>
- <summary> API 최적화 </summary>
+ <summary> 🔽API 최적화 </summary>
 
 
 ### Endpoints
@@ -304,10 +304,13 @@
 
 
 <details>
-    <summary><b> PostMan Capture<b></summary>
+    <summary> 🔽PostMan Capture</summary>
 
 ## PostMan Capture (V1~V4)
-1) **V1**
+<details>
+    <summary>🟥V1</summary>
+    
+### 1) **V1**
 - `GET http://localhost:8080/orders/v1`
 - **Endpoint**: `GET /api/orders/v1`
 - **반환 타입**: `List<Order>`
@@ -316,11 +319,13 @@
     `member -> orders -> member -> orders ...` 형태의 **순환참조(무한 재귀)**가 발생 가능
   - Lazy 로딩 접근 시 **N+1 쿼리**가 대량으로 발생 가능
 
-<details>
-<summary><b> PostMan Capture + SQL Log (V1)</b></summary>
-
 <img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/4fddd042-6323-49ce-b50b-0a098c1ba121" />
 <img width="1440" height="1451" alt="image" src="https://github.com/user-attachments/assets/80ab453e-0f95-4db4-81d5-5fcc42e19c3c" />
+
+
+<details>
+    <summary>&nbsp; 🔽SQL Log (V1) </summary>
+
 ```text
 Hibernate: 
     select
@@ -408,25 +413,30 @@ Hibernate:
         o1_0.order_date,
         o1_0.status 
     from
-        orders o1_0 
-    where
+      orders o1_0 
+   where
         o1_0.member_id=?
 ```
 </details>
+</details>
 
 ---
+<details>
+    <summary>🟨V2</summary>
 
-2) **V2**
+### 2) **V2**
 - `GET http://localhost:8080/orders/v2`
 - **Endpoint**: `GET /api/orders/v2`
 - **반환 타입**: `List<OrderResponse>`
 - **핵심**:
     - 엔티티 직접 노출 대신 API 응답 DTO로 변환하여 스펙을 안정화
     - 변환 과정에서 연관 데이터를 접근하면 Lazy 로딩으로 인해 N+1 쿼리는 여전히 발생 가능
+<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/d6276d8b-f21e-41c2-b12d-7c86db081f18" />
+
+<br>
 
 <details>
-<summary><b> PostMan Capture + SQL Log (V2)</b></summary>
-<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/d6276d8b-f21e-41c2-b12d-7c86db081f18" />
+<summary>&nbsp; 🔽SQL Log (V2)</summary>
 
 ```text
 Hibernate: 
@@ -510,20 +520,25 @@ Hibernate:
         i1_0.item_id=?
 ```
 </details>
+</details>
+
 
 ---
-
-3) **V3**
+<details>
+    <summary>🟩V3</summary>
+### 3) **V3**
 - `GET http://localhost:8080/orders/v3`
 - **Endpoint**: `GET /api/orders/v3`
 - **반환 타입**: `List<OrderResponse>`
 - **핵심**:
     - fetch join으로 연관 데이터를 한 번에 조회하여 N+1 문제를 크게 완화
     - (주의) 컬렉션 fetch join은 결과 row 중복이 발생할 수 있어 distinct를 활용하는 경우가 많음
+<img width="1440" height="1450" alt="image" src="https://github.com/user-attachments/assets/f401668e-ed3b-4656-967e-0b188d1a52b3" />
+
+<br>
 
 <details>
-<summary><b> PostMan Capture + SQL Log (V3)</b></summary>
-<img width="1440" height="1450" alt="image" src="https://github.com/user-attachments/assets/f401668e-ed3b-4656-967e-0b188d1a52b3" />
+<summary><b>   🔽 Log (V3)</b></summary>
 
 ```text
 Hibernate: 
@@ -555,10 +570,12 @@ Hibernate:
 
 ```
 </details>
+</details>
 
 ---
-
-4) **V4**
+<details>
+    <summary>🟦V4</summary>
+### 4) **V4**
 - `GET http://localhost:8080/orders` (v4)
 - **Endpoint**: `GET /api/orders?page=0&size=20`
 - **반환 타입**: `List<OrderQueryDto>`
@@ -566,10 +583,12 @@ Hibernate:
     - 엔티티 로딩 대신 Query DTO로 필요한 필드만 직접 조회
     - 페이징 파라미터(page, size)를 기반으로 안정적인 조회
     - (구현 방식에 따라) 루트 1회 + 아이템 IN 조회 1회 등으로 쿼리 수를 예측 가능하게 제어
+<img width="1440" height="1457" alt="image" src="https://github.com/user-attachments/assets/8855d1fd-6909-40db-be61-2a393c11e98d" />
+    
+<br>
 
 <details>
-<summary><b> PostMan Capture + SQL Log (V4)</b></summary>
-<img width="1440" height="1457" alt="image" src="https://github.com/user-attachments/assets/8855d1fd-6909-40db-be61-2a393c11e98d" />
+    <summary><b>    &nbsp; 🔽SQL Log (V4)</b></summary>
 
 ```text
 Hibernate: 
@@ -608,7 +627,7 @@ Hibernate:
 
 ```
 </details>
-
+</details>
 
 </details>
 
