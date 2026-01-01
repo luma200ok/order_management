@@ -1,5 +1,30 @@
 ![CI](https://github.com/luma200ok/order_management/actions/workflows/ci.yml/badge.svg)
 
+## API 문서 (Swagger)
+
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+- 검증 방법: Swagger에서 Try it out → Execute로 호출
+
+<details>
+<summary> 🔽 사용방법 </summary>
+ 
+### 사용 방법
+
+1. Swagger UI 접속
+![스웨거 풀샷](docs/images/swagger_fullshout.png)
+
+2. 각 API 섹션 Request/Response 스펙
+![](docs/images/)
+
+3. /api/orders/v4 Try it out 직접 호출 테스트
+![v4_try_it_out](docs/images/v4_api_test.png)
+
+
+</details>
+
+---
+
 ## 동시성(재고 정합성) 처리
 
 <details>
