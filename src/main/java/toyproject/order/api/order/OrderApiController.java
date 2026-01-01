@@ -21,7 +21,7 @@ public class OrderApiController {
     private final OrderRepository orderRepository;
     private final OrderQueryService orderQueryService;
 
-    @GetMapping("/orders/v4")
+    @GetMapping("/orders")
     public List<OrderQueryDto> orders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
