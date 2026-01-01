@@ -71,7 +71,8 @@
   "memberId:1"
 } 
 ```
-<img width="1124" height="845" alt="Pasted Graphic" src="https://github.com/user-attachments/assets/4ad6b74f-6fa7-4b6f-a843-682422cfdfd4" />
+![회원 생성](docs/images/order_post.png)
+
 
 
 #### 2) 회원 중복 생성 방지
@@ -79,7 +80,7 @@
   **Response409**
   이미 존재하는 회원 입니다.
 
-<img width="1116" height="847" alt="Pasted Graphic 3" src="https://github.com/user-attachments/assets/280f6ba7-8572-4708-b630-e212f7a27b19" />
+![회원 생성 중복 방지](docs/images/member_duplicate_error409.png)
 
 #### 3) 회원 목록 조회
 - **GET** `/api/members`
@@ -87,17 +88,17 @@
 **Response**
 ```json
 {
-{ "id": 1, "name": "user1" },
-{ "id": 2, "name": "user2" },
-{ "id": 3, "name": "user3" }
+  { "id": 1, "name": "user1" },
+  { "id": 2, "name": "user2" },
+  { "id": 3, "name": "user3" }
 }
 ```
-<img width="1115" height="842" alt="Pasted Graphic 2" src="https://github.com/user-attachments/assets/8e57f202-a30c-4f3b-949b-85371ebcdd61" />
+![회원 목록 조회](docs/images/member_findall.png)
 
 </details>
 
 <details>
-    <summary>🔽Member API</summary>
+    <summary>🔽Items API</summary>
 
 ### Items API
 
@@ -118,8 +119,7 @@
   "itemId:1
 }
 ```
-<img width="1121" height="847" alt="Pasted Graphic 4" src="https://github.com/user-attachments/assets/ad524603-e0db-426f-ad0a-14502c50b992" />
-
+![상품 생성](docs/images/items_post.png)
 #### 2) 상품 목록 조회
 - **GET** `/api/items`
 
@@ -129,9 +129,11 @@
   "id": 1,
   "name": "itemA",
   "price": 10000,
-  "stockQuantity": 5}
+  "stockQuantity": 5
+}
 ```
-<img width="1117" height="846" alt="Pasted Graphic 5" src="https://github.com/user-attachments/assets/29347d0f-559f-43d8-bfbd-d2433e2388ac" />
+
+![상품 목록 조회](docs/images/item_findall.png)
 </details>
 
 <details>
@@ -156,8 +158,7 @@
   "orderId": 1
 }
 ```
-
-<img width="1120" height="845" alt="Pasted Graphic 6" src="https://github.com/user-attachments/assets/de74c455-ec6b-469d-8977-5dd36aff1e47" />
+![주문 생성](docs/images/order_post.png)
 
 #### 2) 주문 목록 조회
 - **GET** `/api/orders`
@@ -180,7 +181,7 @@
   }
 ]
 ```
-<img width="1115" height="841" alt="Pasted Graphic" src="https://github.com/user-attachments/assets/6a556dc0-f128-479d-90e5-06016cb80340" />
+![주문 목록 조회](docs/images/order_findall.png)
 
 ### Orders Cancel API
 
@@ -188,20 +189,19 @@
 - **POST** `/api/orders/1/cancel`
 
 ```json
-**Response **
+** Response **
 {
   "orderId": 1,
   "status" : "CANCEL"
 }
 ```
 
-<img width="1115" height="841" alt="Pasted Graphic 1" src="https://github.com/user-attachments/assets/f6457fc1-f47e-4cea-b40d-5589786ca480" />
-
+![주문 취소](docs/images/order_cancel.png)
 
 #### 2) 주문 취소 후 재고 수량 복구
 - stockQuantity : 4 ➡️ 5
 
-<img width="1115" height="841" alt="Pasted Graphic" src="https://github.com/user-attachments/assets/c3a7dc66-e2cd-431d-ad58-65a2b14055c5" />
+![주문 취소후 재고 수량 복구](docs/images/order_cancel_stockQuantity_inc.png)
 
 
 ### Notes
@@ -299,10 +299,9 @@
   }
 ]
 ```
-<img width="1677" height="1347" alt="image" src="https://github.com/user-attachments/assets/fc15b759-e13b-4dad-9474-9363b0903e81" />
+
+![V4_example](docs/images/v4_response_example.png)
 </details>
-
-
 <details>
     <summary> 🔽PostMan Capture</summary>
 
@@ -319,9 +318,7 @@
     `member -> orders -> member -> orders ...` 형태의 **순환참조(무한 재귀)**가 발생 가능
   - Lazy 로딩 접근 시 **N+1 쿼리**가 대량으로 발생 가능
 
-<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/4fddd042-6323-49ce-b50b-0a098c1ba121" />
-<img width="1440" height="1451" alt="image" src="https://github.com/user-attachments/assets/80ab453e-0f95-4db4-81d5-5fcc42e19c3c" />
-
+![v1_postman](docs/images/v1_postman.png)
 
 <details>
     <summary>&nbsp; 🔽SQL Log (V1) </summary>
@@ -431,7 +428,8 @@ Hibernate:
 - **핵심**:
     - 엔티티 직접 노출 대신 API 응답 DTO로 변환하여 스펙을 안정화
     - 변환 과정에서 연관 데이터를 접근하면 Lazy 로딩으로 인해 N+1 쿼리는 여전히 발생 가능
-<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/d6276d8b-f21e-41c2-b12d-7c86db081f18" />
+
+![v2_postman](docs/images/v2_postman.png)
 
 <br>
 
@@ -533,7 +531,8 @@ Hibernate:
 - **핵심**:
     - fetch join으로 연관 데이터를 한 번에 조회하여 N+1 문제를 크게 완화
     - (주의) 컬렉션 fetch join은 결과 row 중복이 발생할 수 있어 distinct를 활용하는 경우가 많음
-<img width="1440" height="1450" alt="image" src="https://github.com/user-attachments/assets/f401668e-ed3b-4656-967e-0b188d1a52b3" />
+
+![v3_postman](docs/images/v3_postman.png)
 
 <br>
 
@@ -583,7 +582,8 @@ Hibernate:
     - 엔티티 로딩 대신 Query DTO로 필요한 필드만 직접 조회
     - 페이징 파라미터(page, size)를 기반으로 안정적인 조회
     - (구현 방식에 따라) 루트 1회 + 아이템 IN 조회 1회 등으로 쿼리 수를 예측 가능하게 제어
-<img width="1440" height="1457" alt="image" src="https://github.com/user-attachments/assets/8855d1fd-6909-40db-be61-2a393c11e98d" />
+
+![v4_postman](docs/images/v4_postman.png)
     
 <br>
 
