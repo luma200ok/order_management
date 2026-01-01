@@ -40,6 +40,7 @@
 - DB 재조회: 캐시 영향 제거
 </details>
 
+---
 
 ## REST API (Postman 검증)
 
