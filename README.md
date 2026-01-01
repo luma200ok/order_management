@@ -229,10 +229,10 @@
 
 | Version | Endpoint | 반환 타입 | 핵심 포인트 |
 |---|---|---|---|
-| V1 | `GET /orders/v1` | `List<Order>` | 엔티티 직접 반환(문제 재현/학습용). 지연 로딩 이슈를 강제 초기화로 회피하며 N+1 문제를 확인 |
-| V2 | `GET /orders/v2` | `List<OrderResponse>` | 엔티티 → Response DTO 변환으로 API 스펙 안정화 (N+1 가능) |
-| V3 | `GET /orders/v3` | `List<OrderResponse>` | fetch join으로 N+1 최적화 |
-| V4 | `GET /orders` | `List<OrderQueryDto>` | Query DTO 직접 조회 + 페이징(`page`, `size`) |
+| V1 | `GET /api/orders/v1` | `List<Order>` | 엔티티 직접 반환(문제 재현/학습용). 지연 로딩 이슈를 강제 초기화로 회피하며 N+1 문제를 확인 |
+| V2 | `GET /api/orders/v2` | `List<OrderResponse>` | 엔티티 → Response DTO 변환으로 API 스펙 안정화 (N+1 가능) |
+| V3 | `GET /api/orders/v3` | `List<OrderResponse>` | fetch join으로 N+1 최적화 |
+| V4 | `GET /api/orders` | `List<OrderQueryDto>` | Query DTO 직접 조회 + 페이징(`page`, `size`) |
 
 ---
 
@@ -300,18 +300,27 @@
 ]
 ```
 <img width="1677" height="1347" alt="image" src="https://github.com/user-attachments/assets/fc15b759-e13b-4dad-9474-9363b0903e81" />
+</details>
 
----
+
+<details>
+    <summary><b> PostMan Capture<b></summary>
 
 ## PostMan Capture (V1~V4)
 1) **V1**
 - `GET http://localhost:8080/orders/v1`
-<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/4fddd042-6323-49ce-b50b-0a098c1ba121" />
-<img width="1440" height="1451" alt="image" src="https://github.com/user-attachments/assets/80ab453e-0f95-4db4-81d5-5fcc42e19c3c" />
+- **Endpoint**: `GET /api/orders/v1`
+- **반환 타입**: `List<Order>`
+- **핵심**:
+  - 엔티티를 그대로 응답으로 내보내면 **양방향 연관관계(Member ↔ Orders)** 직렬화로 인해  
+    `member -> orders -> member -> orders ...` 형태의 **순환참조(무한 재귀)**가 발생 가능
+  - Lazy 로딩 접근 시 **N+1 쿼리**가 대량으로 발생 가능
 
 <details>
-<summary><b>SQL Log (V1)</b></summary>
+<summary><b> PostMan Capture + SQL Log (V1)</b></summary>
 
+<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/4fddd042-6323-49ce-b50b-0a098c1ba121" />
+<img width="1440" height="1451" alt="image" src="https://github.com/user-attachments/assets/80ab453e-0f95-4db4-81d5-5fcc42e19c3c" />
 ```text
 Hibernate: 
     select
@@ -409,10 +418,15 @@ Hibernate:
 
 2) **V2**
 - `GET http://localhost:8080/orders/v2`
-<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/d6276d8b-f21e-41c2-b12d-7c86db081f18" />
+- **Endpoint**: `GET /api/orders/v2`
+- **반환 타입**: `List<OrderResponse>`
+- **핵심**:
+    - 엔티티 직접 노출 대신 API 응답 DTO로 변환하여 스펙을 안정화
+    - 변환 과정에서 연관 데이터를 접근하면 Lazy 로딩으로 인해 N+1 쿼리는 여전히 발생 가능
 
 <details>
-<summary><b>SQL Log (V2)</b></summary>
+<summary><b> PostMan Capture + SQL Log (V2)</b></summary>
+<img width="1440" height="1452" alt="image" src="https://github.com/user-attachments/assets/d6276d8b-f21e-41c2-b12d-7c86db081f18" />
 
 ```text
 Hibernate: 
@@ -501,10 +515,15 @@ Hibernate:
 
 3) **V3**
 - `GET http://localhost:8080/orders/v3`
-<img width="1440" height="1450" alt="image" src="https://github.com/user-attachments/assets/f401668e-ed3b-4656-967e-0b188d1a52b3" />
+- **Endpoint**: `GET /api/orders/v3`
+- **반환 타입**: `List<OrderResponse>`
+- **핵심**:
+    - fetch join으로 연관 데이터를 한 번에 조회하여 N+1 문제를 크게 완화
+    - (주의) 컬렉션 fetch join은 결과 row 중복이 발생할 수 있어 distinct를 활용하는 경우가 많음
 
 <details>
-<summary><b>SQL Log (V3)</b></summary>
+<summary><b> PostMan Capture + SQL Log (V3)</b></summary>
+<img width="1440" height="1450" alt="image" src="https://github.com/user-attachments/assets/f401668e-ed3b-4656-967e-0b188d1a52b3" />
 
 ```text
 Hibernate: 
@@ -541,10 +560,16 @@ Hibernate:
 
 4) **V4**
 - `GET http://localhost:8080/orders` (v4)
-<img width="1440" height="1457" alt="image" src="https://github.com/user-attachments/assets/8855d1fd-6909-40db-be61-2a393c11e98d" />
+- **Endpoint**: `GET /api/orders?page=0&size=20`
+- **반환 타입**: `List<OrderQueryDto>`
+- **핵심**:
+    - 엔티티 로딩 대신 Query DTO로 필요한 필드만 직접 조회
+    - 페이징 파라미터(page, size)를 기반으로 안정적인 조회
+    - (구현 방식에 따라) 루트 1회 + 아이템 IN 조회 1회 등으로 쿼리 수를 예측 가능하게 제어
 
 <details>
-<summary><b>SQL Log (V4)</b></summary>
+<summary><b> PostMan Capture + SQL Log (V4)</b></summary>
+<img width="1440" height="1457" alt="image" src="https://github.com/user-attachments/assets/8855d1fd-6909-40db-be61-2a393c11e98d" />
 
 ```text
 Hibernate: 
@@ -587,4 +612,5 @@ Hibernate:
 
 </details>
 
+---
 
