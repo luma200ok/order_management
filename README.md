@@ -1,3 +1,5 @@
+![CI](https://github.com/luma0509/order_management/actions/workflows/ci.yml/badge.svg)
+
 ## 동시성(재고 정합성) 처리
 
 <details>
