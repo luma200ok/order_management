@@ -14,10 +14,13 @@
 1. Swagger UI 접속
 ![스웨거 풀샷](docs/images/swagger_fullshout.png)
 
-2. 각 API 섹션 Request/Response 스펙
-![](docs/images/)
+2. 대표 API 스펙 확인 (Request/Response)
+- 주문 생성: `Post /api/orders`
+![생성](docs/images/orders_swagger_post.png)
+- 주문 조회: `GET /api/orders/V4`
+![V4주문조회](docs/images/orders_swagger_get_v4.png)
 
-3. /api/orders/v4 Try it out 직접 호출 테스트
+3. 'GET /api/orders/v4' Try it out 직접 호출 테스트
 ![v4_try_it_out](docs/images/v4_api_test.png)
 
 
@@ -38,7 +41,7 @@
 - 트랜잭션 타이밍에 따라 결과가 비결정적(간헐적 실패/성공)
 
 ### 해결 전략
-본 프로젝트는 **재고 정합성(음수 방지)** 을 최우선으로 두고, 재고 차감 시점에 **비관적 락(PESSIMISTIC_WRITE)** 을 사용한다.
+본 프로젝트는 **재고 정합성(음수 방지)** 을 최우선으로 두고, 재고 차감 시점에 **비관적 락(PESSIMISTIC_WRITE)** 을 사용.
 
 - 재고 변경 책임은 `Item` 도메인에 캡슐화
     - `removeStock(count)`: 재고 차감 + 부족 시 예외
@@ -47,14 +50,14 @@
 - 트랜잭션을 짧게 유지하여 락 점유 시간을 최소화
 
 ### 동시성 테스트(재현/검증 방식)
-멀티스레드 동시성 테스트는 “테스트 트랜잭션” 때문에 착시가 생기기 쉬워, 아래 원칙으로 구성했다.
+멀티스레드 동시성 테스트는 “테스트 트랜잭션” 때문에 착시가 생기기 쉬워, 아래 원칙으로 구성.
 
 #### 테스트 설계 원칙
 1. 테스트 메서드/클래스에 `@Transactional`을 붙이지 않는다.
 2. 테스트 데이터 준비는 `TransactionTemplate`로 감싸 **커밋된 상태**로 만든다.
-3. 멀티스레드는 엔티티를 공유하지 않고 **ID만 공유**한다.
-4. 최종 검증은 `TransactionTemplate`로 새 트랜잭션에서 조회하여 **DB 기준 값**으로 확인한다.
-5. `startLatch`로 스레드를 동시에 출발시키고, `AtomicInteger`로 성공/실패 횟수를 검증한다.
+3. 멀티스레드는 엔티티를 공유하지 않고 **ID만 공유**.
+4. 최종 검증은 `TransactionTemplate`로 새 트랜잭션에서 조회하여 **DB 기준 값**으로 확인.
+5. `startLatch`로 스레드를 동시에 출발시키고, `AtomicInteger`로 성공/실패 횟수를 검증.
 
 #### 기대 결과
 - 재고 1개에 2명이 동시에 주문 → **정확히 1건 성공, 1건 실패**
@@ -71,7 +74,7 @@
 
 ## REST API (Postman 검증)
 
-현재 프로젝트는 Postman으로 아래 흐름을 검증했다.
+현재 프로젝트는 Postman으로 아래 흐름을 검증.
 
 - 회원 생성 → 회원 목록 조회
 - 상품 생성 → 상품 목록 조회
@@ -99,7 +102,6 @@
 } 
 ```
 ![회원 생성](docs/images/order_post.png)
-
 
 
 #### 2) 회원 중복 생성 방지
@@ -232,9 +234,8 @@
 
 
 ### Notes
-- 쓰기 작업(회원/상품/주문 생성) 은 서비스 계층에서 @Transactional로 처리하여 영속성 컨텍스트/트랜잭션 경계가 보장되도록 구성했다.
-- 예외 처리(중복 회원 등)는 @RestControllerAdvice 기반으로 HTTP 상태 코드로 응답한다.
-
+- 쓰기 작업(회원/상품/주문 생성) 은 서비스 계층에서 @Transactional로 처리하여 영속성 컨텍스트/트랜잭션 경계가 보장되도록 구성.
+- 예외 처리(중복 회원 등)는 @RestControllerAdvice 기반으로 HTTP 상태 코드로 응답.
 
 </details>
 
@@ -246,7 +247,7 @@
 
 - **엔티티 직접 반환 문제(노출/직렬화/연관관계 의존)**를 제거하고
 - **N+1 쿼리 문제**를 개선하며
-- 최종적으로 **Query DTO 직접 조회(V4)**로 필요한 데이터만 조회/전송하도록 최적화했습니다.
+- 최종적으로 **Query DTO 직접 조회(V4)**로 필요한 데이터만 조회/전송하도록 최적화.
 
 <details>
  <summary> 🔽API 최적화 </summary>
