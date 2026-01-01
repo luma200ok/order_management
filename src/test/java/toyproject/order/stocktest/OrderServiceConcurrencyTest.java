@@ -4,6 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import toyproject.order.domain.Item;
 import toyproject.order.domain.Member;
@@ -27,7 +30,6 @@ public class OrderServiceConcurrencyTest {
     @Autowired MemberRepository memberRepository;
     @Autowired TransactionTemplate tx;
 
-
     /**
      * 주문 로직에서 재고 차감이 트랜잭션 안에서 일어난다
      *
@@ -36,7 +38,6 @@ public class OrderServiceConcurrencyTest {
      *
      * 결과로 재고가 0으로 수렴하고 음수로 가지 않는다
      */
-
     @Test
     void 주문_음수_안됨() throws Exception {
         // 1) 데이터 준비
@@ -147,6 +148,9 @@ public class OrderServiceConcurrencyTest {
                 itemRepository.findOne(itemId).getStockQuantity()
         );
 
+        assertThat(otherFail.get())
+                .as("otherFail=%d, success=%d, stockFail=%d".formatted(otherFail.get(), success.get(), stockFail.get()))
+                .isEqualTo(0);
         assertThat(success.get()).isEqualTo(1);
         assertThat(stockFail.get()).isEqualTo(1);
         assertThat(otherFail.get()).isEqualTo(0);
