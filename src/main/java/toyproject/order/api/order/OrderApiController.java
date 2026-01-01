@@ -74,4 +74,9 @@ public class OrderApiController {
                 .map(OrderResponse::new)
                 .toList();
     }
+
+    @GetMapping("/test")
+    public void test() {
+        throw new IllegalArgumentException("test");
+    }
 }

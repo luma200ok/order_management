@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -44,9 +45,13 @@ public class Order {
 
     // 주문 생성
     public static Order createOrder(Member member, OrderItem... orderItems) {
+        if (member == null) throw new IllegalArgumentException("주문자는 필수입니다.");
+        if (orderItems == null || orderItems.length==0) throw new IllegalArgumentException("주문 상품은 1개 이상이어야 합니다.");
+
         Order order = new Order();
         order.setMember(member);
         for (OrderItem orderItem : orderItems) {
+            if (orderItem == null) throw new IllegalArgumentException("주문 상품이 비어있습니다.");
             order.addOrderItem(orderItem);
         }
         order.status = OrderStatus.ORDER;
@@ -63,7 +68,6 @@ public class Order {
         this.status = OrderStatus.CANCEL;
         for (OrderItem orderItem : orderItems) {
             orderItem.cancel();
-
         }
     }
 }

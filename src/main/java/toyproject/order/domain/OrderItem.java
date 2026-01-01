@@ -30,7 +30,11 @@ public class OrderItem {
         this.order = order;
     }
 
+
     public OrderItem(Item item, int orderPrice, int count) {
+        if (count <= 0) {
+            throw new IllegalArgumentException("주문 수량은 1 이상이어야 합니다.");
+        }
         this.item = item;
         this.orderPrice = orderPrice;
         this.count = count;

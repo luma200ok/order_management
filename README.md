@@ -32,6 +32,27 @@
 
 ---
 
+## 에러 응답 포맷
+
+본 프로젝트는 에외를 공통 포맷으로 응답한다.
+
+```json
+{
+  "code": "INVALID_REQUEST",
+  "message": "주문 수량은 1 이상이어야 합니다."
+}
+```
+- INVALID_REQUEST : 요청 값 검증 실패(예: @Valid / @Min 등)
+- CONFLICT : 비즈니스 충돌(예: 재고 부족)
+<details>
+<summary> 🔽예시 화면(Postman)</summary>
+
+![예외](docs/images/order_count_0.png)
+
+</details>
+
+---
+
 ## 동시성(재고 정합성) 처리
 
 <details>
@@ -109,7 +130,11 @@
 #### 2) 회원 중복 생성 방지
 - **POST** `/api/members`
 - **Response 409**
-  이미 존재하는 회원 입니다.
+```json
+{
+ "message": "이미 존재하는 회원 입니다."
+}
+```
 
 ![회원 생성 중복 방지](docs/images/member_duplicate_error409.png)
 
@@ -317,7 +342,6 @@
     <summary>🟥V1</summary>
     
 ### 1) **V1**
-- `GET http://localhost:8080/orders/v1`
 - **Endpoint**: `GET /api/orders/v1`
 - **반환 타입**: `List<Order>`
 - **핵심**:
@@ -429,7 +453,6 @@ Hibernate:
     <summary>🟨V2</summary>
 
 ### 2) **V2**
-- `GET http://localhost:8080/orders/v2`
 - **Endpoint**: `GET /api/orders/v2`
 - **반환 타입**: `List<OrderResponse>`
 - **핵심**:
@@ -527,8 +550,8 @@ Hibernate:
 ---
 <details>
     <summary>🟩V3</summary>
+
 ### 3) **V3**
-- `GET http://localhost:8080/orders/v3`
 - **Endpoint**: `GET /api/orders/v3`
 - **반환 타입**: `List<OrderResponse>`
 - **핵심**:
@@ -573,8 +596,8 @@ Hibernate:
 ---
 <details>
     <summary>🟦V4</summary>
+
 ### 4) **V4**
-- `GET http://localhost:8080/orders/v4`
 - **Endpoint**: `GET /api/orders/v4?page=0&size=20`
 - **반환 타입**: `List<OrderQueryDto>`
 - **핵심**:
